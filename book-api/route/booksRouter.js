@@ -4,9 +4,11 @@ const booksController = require('../controllers/booksController')
 
 router.route('/')
     .get(booksController.getAllAuthors)
-    .put(booksController.updateAuthor)
     .post(booksController.createNewAuthor)
-    .delete(booksController.deleteAuthor)
+    .put(booksController.updateAuthor)
+    .delete(booksController.deleteAuthor);
+    
+router.route('/:id')
     .get(booksController.getAuthor)
 
 module.exports = router;
