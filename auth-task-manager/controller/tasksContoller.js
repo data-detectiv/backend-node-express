@@ -10,6 +10,12 @@ const getAllTasks = (req, res) => {
     res.json(tasksDB.tasks);
 };
 
+const getTask = (req, res) => {
+    const task = tasksDB.tasks.find(task => task.id === req.params.id);
+    if (!task) return res.status(400).json({ 'message': 'No task found.'});
+    res.json(task);
+};
+
 const createNewTask = async (req, res) => {
     const newTask = {
         id: req.body.id,
@@ -24,8 +30,8 @@ const createNewTask = async (req, res) => {
     if (!newTask.title || !newTask.id) {
         return res.status(400).json({ 'message': 'An ID and task title are required'});
     }
-
-    tasksDB.setTasks([newTask])
+    const otherTasks = tasksDB.tasks.filter(task => task.id !== req.body.id)
+    tasksDB.setTasks([...otherTasks, newTask])
     await fsPromises.writeFile(
         path.join(__dirname, '..', 'model', 'tasks.json'),
         JSON.stringify(tasksDB.tasks)
@@ -46,8 +52,8 @@ const updateTask = async (req, res) => {
     if (req.body.user_id) task.user_id = req.body.user_id;
 
     const filteredArray = tasksDB.tasks.filter(task => task.id !== req.body.id);
-    const newArray = {...filteredArray, task};
-    tasksDB.setTasks([newArray])
+    const newArray = [...filteredArray, task];
+    tasksDB.setTasks(newArray)
     await fsPromises.writeFile(
         path.join(__dirname, '..', 'model', 'tasks.json'),
         JSON.stringify(tasksDB.tasks)
@@ -69,6 +75,7 @@ const deleteTask = (req, res) => {
 
 module.exports = {
     getAllTasks,
+    getTask,
     createNewTask,
     updateTask,
     deleteTask
