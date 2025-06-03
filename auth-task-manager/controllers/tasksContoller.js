@@ -1,5 +1,5 @@
 const tasksDB = {
-    tasks: require('../model/tasks.json'),
+    tasks: require('../models/tasks.json'),
     setTasks: function (data) {this.tasks = data}
 };
 
@@ -33,7 +33,7 @@ const createNewTask = async (req, res) => {
     const otherTasks = tasksDB.tasks.filter(task => task.id !== req.body.id)
     tasksDB.setTasks([...otherTasks, newTask])
     await fsPromises.writeFile(
-        path.join(__dirname, '..', 'model', 'tasks.json'),
+        path.join(__dirname, '..', 'models', 'tasks.json'),
         JSON.stringify(tasksDB.tasks)
     );
     res.status(201).json(tasksDB.tasks);
@@ -55,7 +55,7 @@ const updateTask = async (req, res) => {
     const newArray = [...filteredArray, task];
     tasksDB.setTasks(newArray)
     await fsPromises.writeFile(
-        path.join(__dirname, '..', 'model', 'tasks.json'),
+        path.join(__dirname, '..', 'models', 'tasks.json'),
         JSON.stringify(tasksDB.tasks)
     );
 
