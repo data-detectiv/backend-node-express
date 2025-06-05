@@ -1,0 +1,5 @@
+20250604	22:55:43	f1d1d157-3761-405e-a6e3-343d247bdb19	TypeError: Cannot read properties of undefined (reading 'map')
+20250605	00:06:35	1008c3ae-94c5-495e-8097-c5ba5f015333	Error: data and salt arguments required
+20250605	00:31:22	c6f1c3e2-eccc-44f4-913c-ed6b2e8c21ef	Error: Cannot set headers after they are sent to the client
+20250605	00:34:21	6995e4ea-0591-4d39-b614-cfc331509a4b	TypeError: Cannot destructure property 'user' of 'req.body' as it is undefined.
+20250605	00:36:36	b7021355-a0ef-4e17-b2d7-de77518944e5	Error: Cannot set headers after they are sent to the client

@@ -8,9 +8,12 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const { logger } = require('./middleware/logEvents')
 const errorHandler = require('./middleware/errorHandler')
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn');
 const PORT = process.env.PORT || 3500;
 
 
+connectDB();
 // middlewares
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -24,8 +27,13 @@ app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJWT);
-app.use('/tasks', require('./routes/api/tasks'))
+app.use('/users', require('./routes/api/users'));
+app.use('/tasks', require('./routes/api/tasks'));
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));
+mongoose.connection.once('open', () => {
+    console.log('MongoDB connected!');
+    app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));
+});
+

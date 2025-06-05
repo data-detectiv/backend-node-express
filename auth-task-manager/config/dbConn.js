@@ -1,7 +1,11 @@
-const allowedOrigins = [
-    'https://www.google.com',
-    'http://127.0.0.1:5500',
-    'http://localhost:3500'
-]
+const mongoose = require('mongoose');
 
-module.exports = allowedOrigins;
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.DATABASE_URI);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+module.exports = connectDB;

@@ -1,32 +1,19 @@
-const usersDB = {
-    users: require('../models/users.json'),
-    setUsers: function (data) {this.users = data}
-};
-
-const fsPromises = require('fs').promises;
-const path = require('path');
-
+const Users = require('../models/User');
 
 const handleLogout = async (req, res) => {
-    const cookies = req.cookies
+    const cookies = req.cookies;
     if (!cookies) return res.sendStatus(204);
 
     const refreshToken = cookies.jwt;
 
-    const foundUser = usersDB.users.find(person => person.refreshToken === refreshToken);
+    const foundUser = await Users.findOne({ refreshToken }).exec();
     if (!foundUser) {
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true});
         return res.sendStatus(204);
-    }
+    };
 
-    const otherUsers = usersDB.users.filter(person => person.refreshToken !== foundUser.refreshToken);
-    const currentUser = {...foundUser, refreshToken: " "};
-    usersDB.setUsers([...otherUsers, currentUser]);
-    await fsPromises.writeFile(
-        path.join(__dirname, '..', 'models', 'users.json'),
-        JSON.stringify(usersDB.users)
-    );
-
+    foundUser.refreshToken = "";
+    await foundUser.save();
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true});
     res.sendStatus(204);
 
